@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	//Tratando a resposta do servidor
 	const useResponse = (json) => {
 		if (json["success"]) {
-			document.location.href = "index.html"
+			document.location.href = "logar.html"
 		} else {
 			alert("Erro ao registrar")
 		}
