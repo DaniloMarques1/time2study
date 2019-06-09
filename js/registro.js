@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-	
+	//Constantes referentes aos inputs html e url
 	const name = document.querySelector("#name")
 	const password = document.querySelector("#password")
 	const confirm_password = document.querySelector("#confirm_password")
@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 
 
+	//Criação do form data para enviar na requisição
 	const createData = () => {
 		const flag = password.value === confirm_password.value ? true : false
 		if (flag) {
@@ -20,13 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	//Tratando o evento de click 
 	sign_up.onclick = (event) => {
+		event.preventDefault()
 		const data = createData()
 		if(validate(data.get("name"), data.get("email"), data.get("password"))){
 			postRequest(data)
 		}
 	}
 
+	//Validando os campos do formulario
 	const validate = (...inputs) => {
 		for (const input of inputs) {
 			if (!input) {
@@ -36,17 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
 		return true
 	}
 
-
+	//Realizando a requisição post enviando os dados do formulario
 	const postRequest = (data) => {
-		console.log(data.get("name"))
 		fetch(url, {method : "POST", body : data})
 		.then(promise  => promise.json())
-		.then(json  => {
-			if (json.success) {
-				document.location.href = "index.html"
-			} else {
-				console.log("error")
-			}
-		});
+		.then(json  => useResponse(json));
+	}
+
+	//Tratando a resposta do servidor
+	const useResponse = (json) => {
+		if (json["success"]) {
+			document.location.href = "index.html"
+		} else {
+			alert("Erro ao registrar")
+		}
 	}
 });	
