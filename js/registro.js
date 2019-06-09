@@ -20,16 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			return data
 		}
 	}
-
-	//Tratando o evento de click 
-	sign_up.onclick = (event) => {
+	
+	form.onsubmit = (event) => {
 		event.preventDefault()
 		const data = createData()
 		if(validate(data.get("name"), data.get("email"), data.get("password"))){
 			postRequest(data)
 		}
 	}
-
 	//Validando os campos do formulario
 	const validate = (...inputs) => {
 		for (const input of inputs) {
