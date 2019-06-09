@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
+from flask_session import Session
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -11,6 +12,8 @@ db = scoped_session(sessionmaker(bind=engine))
 app = Flask(__name__)
 
 CORS(app)
+Session(app)
+
 
 @app.route("/")
 def index():
@@ -35,7 +38,7 @@ def index():
 	
 # 	return jsonify(json)
 
-@app.route("/registrar", methods=["POST"])
+@app.route("/api/registrar", methods=["POST"])
 def registrar():
 	'''
 	Recebera os dados enviados via post do front end e tentara inserir ao banco de dados
@@ -49,9 +52,23 @@ def registrar():
 	else:
 		json  = {"success" : False}	
 	
+	print(json)
 	return jsonify(json)
 
-
+@app.route("/api/logar", methods=["POST"])
+def logar():
+	'''
+	verifica se tem algum registro com o email e senha passados
+	'''
+	email, password = request.form.get("email"), request.form.get("password")
+	result = db.execute("SELECT * FROM User WHERE email = :email AND password = :password", {"email" : email, "password" : password}).fetchone()
+	print(result)
+	if result is not None:
+		json = {"success" : True}
+	else:
+		json = {"success" : False}	
+	
+	return jsonify(json)
 
 if __name__ == "__main__":
 	app.run(debug=True)
