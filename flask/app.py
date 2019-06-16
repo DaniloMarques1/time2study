@@ -1,18 +1,18 @@
-from flask import Flask, jsonify, request, session
-from flask_session import Session
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+
 
 engine = create_engine("mysql://danilo@localhost/time2study")
 
 db = scoped_session(sessionmaker(bind=engine))
 
-
 app = Flask(__name__)
 
+
 CORS(app)
-Session(app)
 
 
 @app.route("/")
@@ -34,10 +34,9 @@ def index():
 # 			json = {"success" : False}
 # 		else:
 # 			db.commit()
-# 			json = {"success" : True}	
-	
-# 	return jsonify(json)
+# 			json = {"success" : True}
 
+# 	return jsonify(json)
 @app.route("/api/registrar", methods=["POST"])
 def registrar():
 	'''
@@ -50,8 +49,8 @@ def registrar():
 		db.commit()
 		json = {"success" : True}
 	else:
-		json  = {"success" : False}	
-	
+		json  = {"success" : False}
+
 	print(json)
 	return jsonify(json)
 
@@ -62,12 +61,11 @@ def logar():
 	'''
 	email, password = request.form.get("email"), request.form.get("password")
 	result = db.execute("SELECT * FROM User WHERE email = :email AND password = :password", {"email" : email, "password" : password}).fetchone()
-	print(result)
+
 	if result is not None:
 		json = {"success" : True}
 	else:
-		json = {"success" : False}	
-	
+		json = {"success" : False}
 	return jsonify(json)
 
 if __name__ == "__main__":

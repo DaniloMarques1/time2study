@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const response = (json) => {
 		if (json["success"]) {
-			window.location.href = "index.html"
+			localStorage.setItem("log", true)
+            window.location.href = "index.html"
 		} else {
 			alert("Error")
 		}
