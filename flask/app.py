@@ -51,7 +51,6 @@ def registrar():
 	else:
 		json  = {"success" : False}
 
-	print(json)
 	return jsonify(json)
 
 @app.route("/api/logar", methods=["POST"])

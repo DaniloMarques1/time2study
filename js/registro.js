@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	const password = document.querySelector("#password")
 	const confirm_password = document.querySelector("#confirm_password")
 	const email = document.querySelector("#email")
-	const sign_up = document.querySelector("#btn_click")
 	const url = "http://localhost:5000/api/registrar"
 	const form = document.querySelector("#form")
 
