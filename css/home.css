@@ -1,7 +1,5 @@
-.navbar-color {
-	background-color: rgb(	255, 99, 71);
-}
+@import "navbar.css";
 
-.navbar .navbar-nav .nav-item .nav-link {
-	color:white;
+html, body{
+	height: 100%;
 }

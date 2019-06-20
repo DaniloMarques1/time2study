@@ -1,0 +1,36 @@
+/* background do navbar */
+.navbar-color {
+	background-color: rgb(	255, 99, 71);
+}
+
+/* Alterando as cores dos links do navbar para branco */
+.navbar .navbar-nav .nav-item .nav-link {
+	color:white;
+}
+
+/* tirando o padding vertical dos itens do menu */
+.navbar {
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+/* fazendo com que o background no item do menu preencha toda a tela */
+.nav-pills .nav-link {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 0;
+  }
+nav > div > ul{
+	margin-right: 60px;
+}
+
+
+
+/* BREAKPOINTS */
+@media only screen and (min-width: 920px) {
+	nav>div>ul>li:hover {
+	   background-color: #75B680; 
+	   transition: all 0.5s;
+   }
+}
+

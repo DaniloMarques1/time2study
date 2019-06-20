@@ -1,3 +1,6 @@
+import {missmatchPassword} from './erros.js'
+
+
 document.addEventListener("DOMContentLoaded", () => {
 	//Constantes referentes aos inputs html e url
 	const name = document.querySelector("#name")
@@ -6,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const email = document.querySelector("#email")
 	const url = "http://localhost:5000/api/registrar"
 	const form = document.querySelector("#form")
-
+	const erro = document.querySelector("#erro")
 
 	//Criação do form data para enviar na requisição
 	const createData = () => {
@@ -18,13 +21,21 @@ document.addEventListener("DOMContentLoaded", () => {
 			data.append("password", password.value)
 			return data
 		}
+		console.log(erro)
+		erro.insertAdjacentHTML("beforeend", missmatchPassword())
+		// deixando o modal visivel
+		$('#myModal').modal('show');
+		
+		return false
 	}
 
 	form.onsubmit = (event) => {
 		event.preventDefault()
 		const data = createData()
-		if(validate(data.get("name"), data.get("email"), data.get("password"))){
-			postRequest(data)
+		if (data != false) {
+			if(validate(data.get("name"), data.get("email"), data.get("password"))){
+				postRequest(data)
+			}
 		}
 	}
 	//Validando os campos do formulario
