@@ -1,9 +1,12 @@
+import {errorLogin} from './erros.js'
+
 document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 	const password = document.querySelector("#password")
 	const email = document.querySelector("#email")
 	const url = "http://localhost:5000/api/logar"
-
+	const erro = document.querySelector("#erro")
+	
 	form.addEventListener("submit", (event) => {
 		event.preventDefault()
 		const data = createData()
@@ -29,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			localStorage.setItem("log", true)
             window.location.href = "index.html"
 		} else {
-			alert("Error")
+			erro.innerHTML = errorLogin()
+			$("#myModal").modal("show")
 		}
 	}
 

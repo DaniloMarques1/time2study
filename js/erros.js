@@ -1,5 +1,5 @@
-const missmatchPassword = () => {
-    return  `<div id="myModal" class="modal" tabindex="-1" role="dialog">
+const modal = (str) => {
+    return `<div id="myModal" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -9,7 +9,7 @@ const missmatchPassword = () => {
           </button>
         </div>
         <div class="modal-body">
-          <p class='text-center'>Senhas não combinam.</p>
+          <p class='text-center'>${str}.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">Sair</button>
@@ -18,8 +18,17 @@ const missmatchPassword = () => {
     </div>
   </div>`
 }
+
+const missmatchPassword = () => {
+    return  modal("Strings não combinam")
+}
+
+const errorLogin = () => {
+  return modal("Senha ou e-mail incorretos")
+}
+
 console.log(missmatchPassword())
 
 
 
-export  { missmatchPassword }
+export  { missmatchPassword, errorLogin }

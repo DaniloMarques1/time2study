@@ -21,22 +21,6 @@ def index():
 	print(data)
 	return "opa"
 
-# @app.route("/registrar", methods=["POST"])
-# def registrar():
-# 	name, email, password = request.form.get("name"), request.form.get("email"), request.form.get("password")
-# 	if name is not None and email is not None and password is not None:
-# 		try:
-# 			print("opa")
-# 			a = db.execute("INSERT INTO User(name, email,password) VALUES(:name, :email, :password)", {"name" : name, "email" : email,"password" : password})
-
-# 			print(a)
-# 		except:
-# 			json = {"success" : False}
-# 		else:
-# 			db.commit()
-# 			json = {"success" : True}
-
-# 	return jsonify(json)
 @app.route("/api/registrar", methods=["POST"])
 def registrar():
 	'''
