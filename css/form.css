@@ -13,9 +13,13 @@ html, body{
 }
 
 form {
-	background: rgba(255, 99, 71, 0.8);
+	background: #FF6347;
 	padding: 100px;
-	border-radius: 20%;
+	border-radius: 8%;
+}
+
+#flex .form-group label {
+	color: white;
 }
 
 
