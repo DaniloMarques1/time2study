@@ -27,8 +27,10 @@ const errorLogin = () => {
   return modal("Senha ou e-mail incorretos")
 }
 
-console.log(missmatchPassword())
+const errorRegister = () => {
+    return modal("Erro ao registrar")
+}
 
+//console.log(missmatchPassword())
 
-
-export  { missmatchPassword, errorLogin }
+export  { missmatchPassword, errorLogin, errorRegister }

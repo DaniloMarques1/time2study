@@ -1,4 +1,4 @@
-import {missmatchPassword} from './erros.js'
+import {missmatchPassword, errorRegister} from './erros.js'
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -22,10 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
 			return data
 		}
 		console.log(erro)
-		erro.insertAdjacentHTML("beforeend", missmatchPassword())
-		// deixando o modal visivel
+		//erro.insertAdjacentHTML("beforeend", missmatchPassword())
+		erro.innerHTML = missmatchPassword()
+        // deixando o modal visivel
 		$('#myModal').modal('show');
-		
+
 		return false
 	}
 
@@ -60,7 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (json["success"]) {
 			document.location.href = "logar.html"
 		} else {
-			alert("Erro ao registrar")
-		}
+			erro.innerHTML = errorRegister()
+			$("#myModal").modal("show")
+        }
 	}
-});	
+});
