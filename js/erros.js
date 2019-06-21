@@ -20,7 +20,7 @@ const modal = (str) => {
 }
 
 const missmatchPassword = () => {
-    return  modal("Strings não combinam")
+    return  modal("Senhas não combinam")
 }
 
 const errorLogin = () => {

@@ -1,6 +1,6 @@
 /* background do navbar */
 .navbar-color {
-	background-color: rgb(	255, 99, 71);
+	background-color: #FF6347;/*rgba(255, 99, 71, 0.8);*/
 }
 
 /* Alterando as cores dos links do navbar para branco */
@@ -14,22 +14,31 @@
 	padding-top: 0;
 }
 
+/*Espaçamento entre o sign up e sign in*/
+.navbar .navbar-collapse .navbar-nav .nav-item :first-child{
+	margin-right: 15px;
+	margin-left: 15px;
+}
+
 /* fazendo com que o background no item do menu preencha toda a tela */
 .nav-pills .nav-link {
     padding-top: 15px;
     padding-bottom: 15px;
     border-radius: 0;
   }
+  
 nav > div > ul{
-	margin-right: 60px;
+	margin-right: 55px;
 }
 
-
+.navbar .navbar-toggler .navbar-toggler-icon {
+	background-image: url('https://mdbootstrap.com/img/svg/hamburger3.svg?color=FF6347');
+}
 
 /* BREAKPOINTS */
 @media only screen and (min-width: 920px) {
 	nav>div>ul>li:hover {
-	   background-color: #75B680; 
+	   background-color: #75B680;
 	   transition: all 0.5s;
    }
 }
