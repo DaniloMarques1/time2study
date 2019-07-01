@@ -3,3 +3,34 @@
 html, body{
 	height: 100%;
 }
+
+.container {
+	margin-top: 40px;
+}
+
+.plus:hover{
+	color: white;
+	background: red;
+	transition: all 1s;
+}
+
+.plus{
+	padding: 10px 25px 10px 25px;
+	background: #F05B5B;
+	color: white;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 30vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+@media only screen and (min-width: 200px) {
+	.vertical-center {
+	  display: flex;
+	  justify-content: center;
+	}
+}
