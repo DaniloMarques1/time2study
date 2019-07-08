@@ -1,5 +1,7 @@
 CREATE DATABASE time2study;
 
+use time2study;
+
 CREATE TABLE User(
 	id int AUTO_INCREMENT PRIMARY KEY,
 	name varchar(50) NOT NULL,
@@ -7,4 +9,4 @@ CREATE TABLE User(
 	password varchar(20) NOT NULL
 );
 
-INSERT INTO User()
+
