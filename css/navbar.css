@@ -30,10 +30,10 @@
 nav > div > ul{
 	margin-right: 55px;
 }
-
+/*
 .navbar .navbar-toggler .navbar-toggler-icon {
 	background-image: url('https://mdbootstrap.com/img/svg/hamburger3.svg?color=FF6347');
-}
+}*/
 
 /* BREAKPOINTS */
 @media only screen and (min-width: 920px) {

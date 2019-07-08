@@ -38,19 +38,59 @@
   </header>
     
     <main>
-      <div class="container">
-        <h2>Atividades</h2>
-        <div class="row todo-column">
-          <div class=" col-sm-6 todo-items">
+         
+        <div class="container">    
+          <div class="div1">
+            <div class="title">
+              <h2 >Atividades</h2>
+            </div>
+          </div> 
+         <div class="div2">
+              <p>Estudar flask</p>
+          </div>
             
-            <p>Estudar flask</p>
+            <div class="div3 vertical-center add-todo">
+              <button data-toggle="modal" data-target="#myModal" class="btn plus">+</button>
+            </div>
           </div>
-          <div class="col-sm-auto vertical-center add-todo">
-            <button class="btn plus">+</button>
-          </div>
-        </div>
-      </div>  
 
+          <!-- MOdAL -->
+          <div id="myModal" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add a new task</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form class="container-form">
+                   
+                    <div class="task-title-form form-group">
+                      <label for="task-title"> Task title
+                        <input type="text" id="task-title" name="task-title" class="form-control">
+                      </label>
+                    </div>
+                    <div class="task-pomodoro-form">
+                      <label for="task-pomodoro">Pomodoros
+                        <input type="number" name="task-pomodoro" id="task-pomodoro" class="form-control">
+                      </label>
+                    </div>
+
+                    <div class="task-description-form">
+                      <label for="task-desc">Description</label>
+                       <textarea class="form-control"></textarea>
+                      
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Sair</button>
+                </div>
+              </div>
+    </div>
+  </div
     </main>
 
     <!-- Optional JavaScript -->
