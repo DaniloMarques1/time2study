@@ -1,5 +1,15 @@
 import {errorLogin} from './erros.js'
 
+//Só permite ir para a pagina de login caso não esteja logado
+const isNotLogged = () => {
+	const flag = localStorage.getItem("log")
+	if (flag == "true") {
+		window.location.href = "index.html"
+	}
+}
+
+isNotLogged()
+
 document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 	const password = document.querySelector("#password")
