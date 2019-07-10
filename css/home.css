@@ -5,10 +5,11 @@ html, body{
 	background-color: rgba(228,107,107, 0.2)
 }
 
+
+/* ATIVIDADES */
 .container {
 	margin-top: 20px; 
 	display: grid;
-
 	grid-template-columns: 1fr 3fr;
 	grid-template-rows: 1fr minmax(400px, auto);
 	grid-gap: 10px;
@@ -50,11 +51,14 @@ html, body{
 
 }
 
+/* MODAL */
 .container-form{
 	display: grid;
 	grid-template-areas: "task-title-form task-pomodoro-form"
-						 "task-description-form task-description-form";
+						 "task-description-form task-description-form"
+						 "btn_add btn_add";
 	grid-template-columns: 1fr 1fr;
+	grid-gap: 4px;
 }
 
 .task-description-form{
@@ -69,6 +73,30 @@ html, body{
 	grid-area: task-pomodoro-form;
 }
 
+.btn_add {
+	grid-area: btn_add;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.btn_add_task{
+	border: 1px solid #75B680;
+}
+.btn_add_task:hover{
+	background-color: #75B680;
+	color: white;
+	transition: all 0.3;
+}
+
+.btn_sair{
+	border: 1px solid #F05B5B;
+}
+
+.btn_sair:hover{
+	color: white;
+	background-color: #F05B5B;
+	transition: all 0.3s;
+}
 
 /* BREAKPOINTS */
 @media only screen and (max-width: 620px) {

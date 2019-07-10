@@ -42,7 +42,7 @@
         <div class="container">    
           <div class="div1">
             <div class="title">
-              <h2 >Atividades</h2>
+              <h3>Atividades</h3>
             </div>
           </div> 
          <div class="div2">
@@ -65,28 +65,30 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <form class="container-form">
+                  <form id="add_task" class="container-form">
                    
                     <div class="task-title-form form-group">
                       <label for="task-title"> Task title
-                        <input type="text" id="task-title" name="task-title" class="form-control">
+                        <input type="text" placeholder="Task title" id="task-title" name="task-title" class="form-control">
                       </label>
                     </div>
                     <div class="task-pomodoro-form">
                       <label for="task-pomodoro">Pomodoros
-                        <input type="number" name="task-pomodoro" id="task-pomodoro" class="form-control">
+                        <input type="number" placeholder="pomodoros for this task" name="task-pomodoro" id="task-pomodoro" class="form-control">
                       </label>
                     </div>
 
                     <div class="task-description-form">
                       <label for="task-desc">Description</label>
-                       <textarea class="form-control"></textarea>
-                      
+                       <textarea maxlength="400" placeholder="A description" class="form-control"></textarea>
+                    </div>
+                    <div class="btn_add">
+                      <button class="btn btn_add_task">Add</button>
                     </div>
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-dismiss="modal">Sair</button>
+                  <button type="button" class="btn btn_sair" data-dismiss="modal">Sair</button>
                 </div>
               </div>
     </div>
