@@ -7,6 +7,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/home.css">
         <title>Hello, world!</title>
   </head>
@@ -43,10 +44,11 @@
           <div class="div1">
             <div class="title">
               <h3>Atividades</h3>
+
             </div>
           </div> 
-         <div class="div2">
-              <p>Estudar flask</p>
+         <div id="tasks" class="div2">
+              
           </div>
             
             <div class="div3 vertical-center add-todo">
@@ -83,12 +85,16 @@
                        <textarea maxlength="400" placeholder="A description" id="task-description" class="form-control"></textarea>
                     </div>
                     <div class="btn_add">
-                      <button data-dismiss="modal" class="btn btn_add_task">Add</button>
+                      <button class="btn btn_add_task"  >Add</button>
                     </div>
                   </form>
                 </div>
               </div>
     </div>
+  </div>
+
+  <div id="timer">
+    
   </div>
     </main>
 

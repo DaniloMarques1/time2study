@@ -88,6 +88,22 @@ html, body{
 	transition: all 0.3;
 }
 
+.task-item {
+	border: 1px solid #75B680;
+	margin: 4px;
+	padding: 4px;
+	color: #F05B5B;
+}
+
+.task-item:hover{
+	color: white;
+	background: #75B680;
+	transition: all .3s;
+
+}
+.play_button{
+	cursor: pointer;
+}
 
 /* BREAKPOINTS */
 @media only screen and (max-width: 620px) {
