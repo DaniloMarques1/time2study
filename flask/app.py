@@ -3,7 +3,7 @@ from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine("mysql://danilo@localhost/time2study")
+engine = create_engine("mysql://root:12345@localhost/time2study")
 
 db = scoped_session(sessionmaker(bind=engine))
 
@@ -47,6 +47,25 @@ def logar():
 	else:
 		json = {"success" : False}
 	return jsonify(json)
+
+
+@app.route("/api/addTask", methods=["POST"])
+def add_task():
+	'''
+	adiciona uma nova atividade no banco de dados
+	'''
+	id_user, title, qtd_pomodoros, description = request.form.get("id_user"), request.form.get("title"), request.form.get("qtd_pomodoros"), request.form.get("description")
+	print("Dados das atividades: ")
+	print(id_user, title, qtd_pomodoros, description)
+	return jsonify({"success" : True})
+
+
+def view_tasks():
+	'''
+	retorna as tasks com finished == false do banco
+	retorno um json no formato {tasks: [lista com as tasks]}
+	'''
+	pass
 
 if __name__ == "__main__":
 	app.run(debug=True)
