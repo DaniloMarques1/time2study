@@ -88,15 +88,6 @@ html, body{
 	transition: all 0.3;
 }
 
-.btn_sair{
-	border: 1px solid #F05B5B;
-}
-
-.btn_sair:hover{
-	color: white;
-	background-color: #F05B5B;
-	transition: all 0.3s;
-}
 
 /* BREAKPOINTS */
 @media only screen and (max-width: 620px) {
