@@ -55,17 +55,22 @@ def add_task():
 	adiciona uma nova atividade no banco de dados
 	'''
 	id_user, title, qtd_pomodoros, description = request.form.get("id_user"), request.form.get("title"), request.form.get("qtd_pomodoros"), request.form.get("description")
-	print("Dados das atividades: ")
-	print(id_user, title, qtd_pomodoros, description)
+	result =  db.execute("INSERT INTO Task(id_user, title, qtd_pomodoros, description, finished) VALUES(:id_user,:title, :qtd_pomodoros, :description, DEFAULT)", {"id_user" : id_user, "title" : title, "qtd_pomodoros" : qtd_pomodoros, "description" : description})
+	db.commit()
+	
 	return jsonify({"success" : True})
 
-
+@app.route("/api/viewTasks", methods=["GET"])
 def view_tasks():
 	'''
 	retorna as tasks com finished == false do banco
 	retorno um json no formato {tasks: [lista com as tasks]}
 	'''
-	pass
+	result = db.execute("SELECT * FROM Task WHERE finished = '0'").fetchall()
+	tasks = []
+	for i in result:
+		tasks.append(list(i))
+	return jsonify({"tasks" : tasks})
 
 if __name__ == "__main__":
 	app.run(debug=True)
