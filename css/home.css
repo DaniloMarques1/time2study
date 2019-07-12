@@ -93,6 +93,7 @@ html, body{
 	margin: 4px;
 	padding: 4px;
 	color: #F05B5B;
+	border-radius: 6px;
 }
 
 .task-item:hover{
