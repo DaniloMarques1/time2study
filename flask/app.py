@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from flask_jwt import JWT, jwt_required, current_identity
 
 engine = create_engine("mysql://root:12345@localhost/time2study")
 
@@ -9,8 +10,15 @@ db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = 'super-secret'
+
 CORS(app)
 
+class User:
+	def __init__(self, id, name, email):
+		self.id = id
+		self.name = name
+		self.email = email
 
 @app.route("/")
 def index():
@@ -34,20 +42,37 @@ def registrar():
 
 	return jsonify(json)
 
-@app.route("/api/logar", methods=["POST"])
-def logar():
+def logar(email, password):
 	'''
 	verifica se tem algum registro com o email e senha passados
 	'''
-	email, password = request.form.get("email"), request.form.get("password")
+	# email, password = request.form.get("email"), request.form.get("password")
 	result = db.execute("SELECT * FROM User WHERE email = :email AND password = :password", {"email" : email, "password" : password}).fetchone()
-
 	if result is not None:
-		json = {"success" : True}
+		user = User(result[0], result[1], result[2])
+		return user
 	else:
-		json = {"success" : False}
-	return jsonify(json)
+		return None
+	# return jsonify(json)
 
+def identity(payload):
+	user_id = payload["identity"]
+	result = db.execute("SELECT * FROM User WHERE id_user = :user_id", {"user_id" : user_id}).fetchone()
+	print("RESULT", result)
+	if result is not None:
+		response = {"id" : result[0], "name" : result[1], "email" : result[2]}
+		return response
+
+jwt = JWT(app, logar, identity)
+
+@app.route("/user")
+@jwt_required()
+def user():
+	return f"{current_identity}"
+
+'''
+	Endpoints referente as atividades
+'''
 
 @app.route("/api/addTask", methods=["POST"])
 def add_task():
