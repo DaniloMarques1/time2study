@@ -14,6 +14,7 @@ app.config['SECRET_KEY'] = 'super-secret'
 
 CORS(app)
 
+#Classe para ser usada pelo jwt
 class User:
 	def __init__(self, id, name, email):
 		self.id = id
@@ -61,14 +62,15 @@ def identity(payload):
 	print("RESULT", result)
 	if result is not None:
 		response = {"id" : result[0], "name" : result[1], "email" : result[2]}
-		return response
+		return (dict(response))
 
 jwt = JWT(app, logar, identity)
 
 @app.route("/user")
 @jwt_required()
 def user():
-	return f"{current_identity}"
+	print(type(dict(current_identity)))
+	return jsonify(dict(current_identity))
 
 '''
 	Endpoints referente as atividades
@@ -85,13 +87,13 @@ def add_task():
 	
 	return jsonify({"success" : True})
 
-@app.route("/api/viewTasks", methods=["GET"])
-def view_tasks():
+@app.route("/api/viewTasks/<id_user>", methods=["GET"])
+def view_tasks(id_user):
 	'''
 	retorna as tasks com finished == false do banco
 	retorno um json no formato {tasks: [lista com as tasks]}
 	'''
-	result = db.execute("SELECT * FROM Task WHERE finished = '0'").fetchall()
+	result = db.execute("SELECT * FROM Task WHERE finished = '0' and id_user = :id_user", {"id_user" : id_user}).fetchall()
 	tasks = []
 	for i in result:
 		tasks.append(list(i))
