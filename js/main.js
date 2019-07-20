@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     //Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
     sair.addEventListener("click", () => {
-        localStorage.setItem("log", false)
+        localStorage.clear()
         window.location.href = "logar.html"
     });
 
@@ -19,15 +19,22 @@ document.addEventListener("DOMContentLoaded", () => {
     	/* 
     		faz uma requisição de todas as tasks para o endpoint 
 			retorno da requisição no formato -> {"tasks" : [lista de tasks]}
-    	*/
-    	const url = "http://localhost:5000/api/viewTasks"
-    	fetch(url)
-    	.then(promise => promise.json())
-    	.then(json => {
-    		// tasks = json["tasks"]
-    		//Passa a lista de tasks
-    		showTasks(json["tasks"])
-    	})
+    	*/ 
+        const myHeaders = new Headers()
+        myHeaders.append("Authorization", "JWT " + localStorage.getItem("token"))
+    	fetch("http://localhost:5000/user", {method : "GET", headers:myHeaders})
+        .then(response => response.json())
+        .then(json => {
+            console.log("JSON", json)
+            fetch(`http://localhost:5000/api/viewTasks/${json.id}`)
+                .then(promise => promise.json())
+                .then(json => {
+                // tasks = json["tasks"]
+                //Passa a lista de tasks
+                showTasks(json["tasks"])
+            })    
+        })
+        
     }
 
     const showTasks = (tasks) => {
@@ -41,11 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
     		@task[4] - descrição
     	*/
     	const tasksDiv = document.querySelector("#tasks")
-    	
+    	let taskElement = ""
     	for (const task of tasks) {
 
-    		tasksDiv.insertAdjacentHTML("beforeend", createViewTasks(task[2], task[0]))	
+            taskElement += createViewTasks(task[2], task[0])
+            
     	}
+        tasksDiv.innerHTML = taskElement
     	//cada dastk criada terá uma classe (plau_button) associado com ela, vamos para cada task adicionar um evento
     	const startTaskButton = Array.from(document.querySelectorAll(".play_button"))
     	
@@ -130,14 +139,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const addTask = () => {
     	/*
-		função responsavel por enviar os dados para o servidor
-    	*/
-    	const title = document.querySelector("#task-title")
-    	const qtd_pomodoros = document.querySelector("#task-pomodoro")
-    	const description = document.querySelector("#task-description")
-
-    	const data = createData(1, title.value, qtd_pomodoros.value, description.value)
-    	request(data)
+		  função responsavel por enviar os dados para o servidor
+		*/
+        var myHeaders = new Headers()
+        myHeaders.append("Authorization", "JWT " + localStorage.getItem("token"))
+		fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
+        .then(response => response.json())
+        .then(user => {
+            console.log(user["name"])
+            const title = document.querySelector("#task-title")
+            const qtd_pomodoros = document.querySelector("#task-pomodoro")
+            const description = document.querySelector("#task-description")
+            const data = createData(user.id, title.value, qtd_pomodoros.value, description.value)
+            request(data)    
+        })	
+    	
     }
 
     form.addEventListener("submit", (event) => {
@@ -149,7 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
     	/*
 		cria um objeto FormData() que será enviado para o servidor
     	*/
-    	const data = new FormData();
+		const data = new FormData();
+		console.log(data)
     	data.append("id_user", id_user)
     	data.append("title", title)
     	data.append("qtd_pomodoros", qtd_pomodoros)
@@ -176,8 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
    			requestTasks()
    		}
    	}
-
-
 
 });
 
