@@ -3,16 +3,18 @@ import {errorLogin} from './erros.js'
 //Só permite ir para a pagina de login caso não esteja logado
 const isLogged = () => {
 	const token = localStorage.getItem("token")
-	var myHeaders = new Headers()
-	myHeaders.append("Authorization", "JWT " + token)
-	myHeaders.append("Content-Type", "application/json")
-	fetch("http://localhost:5000/user", {headers: myHeaders})
-	.then(response => {
-		if (response.status == 200) {
-			window.location.href = "index.html"
-		}
-		
-	})
+	if (token != "undefined" && token != null) {
+		var myHeaders = new Headers()
+		myHeaders.append("Authorization", "Bearer " + token)
+		myHeaders.append("Content-Type", "application/json")
+		fetch("http://localhost:5000/user", {headers: myHeaders})
+		.then(response => {
+			if (response.ok) {
+				window.location.href = "index.html"
+			}		
+		})
+
+	}
 }
 isLogged()
 
@@ -20,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 	const password = document.querySelector("#password")
 	const email = document.querySelector("#email")
-	const url = "http://localhost:5000/auth"
+	const url = "http://localhost:5000/logar"
 	const erro = document.querySelector("#erro")
 	
 	form.addEventListener("submit", (event) => {
@@ -30,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	const createData = () => {
-		const data = {username : email.value, password : password.value}
+		const data = {email : email.value, password : password.value}
 		return JSON.stringify(data)
 	}
 	const request = (data) => {
@@ -38,21 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		myHeaders.append("Content-Type", "application/json");
 		fetch(url, {method : "POST", headers: myHeaders, body: data})
 		.then(res => {
-			return res.json()
+			if (res.ok) {
+				return res.json()
+			} else {
+				erro.innerHTML = errorLogin()
+				$("#myModal").modal("show")
+			}
 		})
-		.then(json => response(json))
-	}
-
-	const response = (jsonResponse) => {
-		// window.location.href = 	"index.html"
-		if (jsonResponse.hasOwnProperty("status_code")) {
-			erro.innerHTML = errorLogin()
-			$("#myModal").modal("show")
-		} else {
-			const token = jsonResponse["access_token"]
+		.then(json => {
+			const token = json["token"]
 			localStorage.setItem("token", token)
 			window.location.href = "index.html"
-		}
+		});
 	}
 
 });

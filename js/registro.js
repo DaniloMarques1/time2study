@@ -1,23 +1,13 @@
 import {missmatchPassword, errorRegister} from './erros.js'
 
 
-//Só permite ir para a pagina de registro caso não esteja logado
-const isNotLogged = () => {
-	const flag = localStorage.getItem("log")
-	if (flag == "true") {
-		window.location.href = "index.html"
-	}
-}
-
-isNotLogged()
-
 document.addEventListener("DOMContentLoaded", () => {
 	//Constantes referentes aos inputs html e url
 	const name = document.querySelector("#name")
 	const password = document.querySelector("#password")
 	const confirm_password = document.querySelector("#confirm_password")
 	const email = document.querySelector("#email")
-	const url = "http://localhost:5000/api/registrar"
+	const url = "http://localhost:5000/registrar"
 	const form = document.querySelector("#form")
 	const erro = document.querySelector("#erro")
 
@@ -25,10 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const createData = () => {
 		const flag = password.value === confirm_password.value ? true : false
 		if (flag) {
-			const data = new FormData()
-			data.append("name", name.value)
-			data.append("email", email.value)
-			data.append("password", password.value)
+			const data = {name : name.value, email : email.value, password : password.value}
 			return data
 		}
 		console.log(erro)
@@ -44,10 +31,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		event.preventDefault()
 		const data = createData()
 		if (data != false) {
-			if(validate(data.get("name"), data.get("email"), data.get("password"))){
-				postRequest(data)
-			}
+			postRequest(data)
 		}
+		// if (data != false) {
+		// 	if(validate(data.get("name"), data.get("email"), data.get("password"))){
+		// 		postRequest(data)
+		// 	}
+		// }
 	}
 	//Validando os campos do formulario
 	const validate = (...inputs) => {
@@ -61,18 +51,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	//Realizando a requisição post enviando os dados do formulario
 	const postRequest = (data) => {
-		fetch(url, {method : "POST", body : data})
-		.then(promise  => promise.json())
-		.then(json  => useResponse(json));
+		console.log(data)
+		const myHeaders = new Headers()
+		myHeaders.append("Content-Type", "application/json")
+		fetch(url, {method : "POST", body : JSON.stringify(data), headers : myHeaders})
+		.then(promise  => {
+			if (promise.ok) {
+				window.location.href = "logar.html"
+			} else {
+				erro.innerHTML = errorRegister()
+				$("#myModal").modal("show")
+			}
+		})
+		
 	}
 
-	//Tratando a resposta do servidor
-	const useResponse = (json) => {
-		if (json["success"]) {
-			document.location.href = "logar.html"
-		} else {
-			erro.innerHTML = errorRegister()
-			$("#myModal").modal("show")
-        }
-	}
+
 });

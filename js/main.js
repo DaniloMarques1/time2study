@@ -1,8 +1,28 @@
+function isLogged() {
+    const token = localStorage.getItem("token")
+    if (token != "undefined" && token != null) {
+        const myHeaders = new Headers()
+        myHeaders.append("Authorization", "Bearer " + token)
+        fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
+        .then(response => {
+            if (!response.ok) {
+                window.location.href = "logar.html"
+            }
+        })
+
+    } else {
+        window.location.href = "logar.html"
+    }
+}
+
+isLogged()
+
 document.addEventListener("DOMContentLoaded", () => {
     const sair = document.querySelector("#sair")
     
     //Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
     sair.addEventListener("click", () => {
+        console.log("opa")
         localStorage.clear()
         window.location.href = "logar.html"
     });
@@ -10,189 +30,86 @@ document.addEventListener("DOMContentLoaded", () => {
     //div do formulario de criação de tarefa
     const form = document.querySelector("#add_task");
 
-    //div do cronometro
-    const timerDiv = document.querySelector("#timer")
- 
-    
+	const showTasks = () => {
+		const tasksDiv = document.querySelector("#tasks")
+		const myHeaders = new Headers()
+		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
+		fetch("http://localhost:5000/tasks", {headers : myHeaders})
+		.then(response => {
+			if (response.ok) {
+				return response.json()
+			} else {
+				window.location.href = "logar.html"
+			}
+		})
+		.then(json => {
+			const tasks = json["tasks"] // lista de tasks onde cada task na lista é um objeto
+			let div = "";
+			for (const task of tasks) {
+				div += genetateDivTask(task)
+			}
+			tasksDiv.innerHTML = div
+		});
+	}
+	showTasks()
 
-    const requestTasks = () => {
-    	/* 
-    		faz uma requisição de todas as tasks para o endpoint 
-			retorno da requisição no formato -> {"tasks" : [lista de tasks]}
-    	*/ 
-        const myHeaders = new Headers()
-        myHeaders.append("Authorization", "JWT " + localStorage.getItem("token"))
-    	fetch("http://localhost:5000/user", {method : "GET", headers:myHeaders})
-        .then(response => response.json())
-        .then(json => {
-            console.log("JSON", json)
-            fetch(`http://localhost:5000/api/viewTasks/${json.id}`)
-                .then(promise => promise.json())
-                .then(json => {
-                // tasks = json["tasks"]
-                //Passa a lista de tasks
-                showTasks(json["tasks"])
-            })    
-        })
-        
-    }
-
-    const showTasks = (tasks) => {
-    	/* 
-    		função responsavel por exibir as tasks na tela 
-    		@param - tasks - Lista de tarefas
-    		@task[0] - id da task
-    		@task[1] - id do usuario
-    		@task[2] - Titulo da task
-    		@task[3] - qtd_pomodoros
-    		@task[4] - descrição
-    	*/
-    	const tasksDiv = document.querySelector("#tasks")
-    	let taskElement = ""
-    	for (const task of tasks) {
-
-            taskElement += createViewTasks(task[2], task[0])
-            
-    	}
-        tasksDiv.innerHTML = taskElement
-    	//cada dastk criada terá uma classe (plau_button) associado com ela, vamos para cada task adicionar um evento
-    	const startTaskButton = Array.from(document.querySelectorAll(".play_button"))
-    	
-    	startTaskButton.map((i) => {
-    		i.addEventListener("click", () => {
-    			//pegando o  id que foi atribuido a task
-    			const id_task = i.getAttribute("data-id")
-    			//recuperar a task (array) clicada
-    			const taskArray = getTask(id_task, tasks)
-    			//envia essa task clicada para o modal do cronometro que será criada
-    			timerDiv.innerHTML = timer(taskArray)
-    			//Exibe o modal criado
-    			$("#timerModal").modal("show")
-    		})
-    	});
-    }
-
-    const getTask = (id_task, tasks) => {
-    	/*
-			função vai retornar a task clicada dentro de tasks
-			@id_task - id da task clicada
-			@tasks - array de arrays (task de tasks)
-			retorna o array com os dados da task clicada
-    	*/
-    	for (let task of tasks) {
-    		if (task[0] == id_task) {
-    			return task
-    		}
-    	}
-    }
-
-    const createViewTasks = (task_title, task_id) => {
-    	/*
-			Função responsavel por criar a div com a task onde cada task terá um data-id={task_id}
-			@task_title - Titulo da task
-			@task_id - Id da task
-    	*/
-    	return `
-    		<div class='task-item'>
-    			<span> ${task_title} <span class="play_button oi oi-media-play" data-id='${task_id}'></span></span>
-    		</div>
-
-    	`
-    }
-
-    //ao carregar a pagina, exibir todas as tasks
-    requestTasks()
-    
-    const timer = (taskArray) => {
-    	/*
-			criará um modal com os dados da task passada
-			@taskArray - array com os dados da task passada.
-			@taskArray[0] - id da task
-    		@taskArray[1] - id do usuario
-    		@taskArray[2] - Titulo da task
-    		@taskArray[3] - qtd_pomodoros
-    		@taskArray[4] - descrição
-    	*/
-    	
-    	return `
-         <div id="timerModal" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Timer</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                 	<h1>Cronomettro</h1>
-                 	<h3>${taskArray[2]}</h3>
-                </div>
-              </div>
-    	</div>
-
-    	`
-    }
-
-
-
+	const genetateDivTask = (task) => {
+		return `
+			<div class='task-item'>
+		    	<span> ${task.title} <span class="play_button oi oi-media-play" data-id='${task.id_task}'></span></span>
+		    </div>
+		`
+	}
 
     const addTask = () => {
     	/*
-		  função responsavel por enviar os dados para o servidor
+		  função responsavel por enviar os dados para o servidor da atividade
 		*/
         var myHeaders = new Headers()
-        myHeaders.append("Authorization", "JWT " + localStorage.getItem("token"))
+        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
 		fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
-        .then(response => response.json())
-        .then(user => {
-            console.log(user["name"])
-            const title = document.querySelector("#task-title")
-            const qtd_pomodoros = document.querySelector("#task-pomodoro")
-            const description = document.querySelector("#task-description")
-            const data = createData(user.id, title.value, qtd_pomodoros.value, description.value)
-            request(data)    
-        })	
-    	
-    }
+        .then(response => {
+			if (response.ok) {
+				return response.json()
+			} else {
+				window.location.href = "logar.html"
+			}
+		})
+		.then(user => {
+			console.log
+			//Requisição post para adicionar a tarefa
+			const titleTask       = document.querySelector("#task_title")
+			const taskDescription = document.querySelector("#task_description")
+			const taskPomodoro    = document.querySelector("#task_pomodoro")
+			const body = {
+				"title" : titleTask.value,
+				"description" : taskDescription.value,
+				"pomodoro_total" : taskPomodoro.value,
+				"id_user" : user.id_user
+			}
+			const myHeaders = new Headers()
+			myHeaders.append("Content-Type", "application/json")
+			fetch("http://localhost:5000/addTask", {method : "POST", body : JSON.stringify(body), headers : myHeaders})
+			.then(response => {
+				if (response.ok) {
+					showTasks()
+					$("#myModal").modal("hide")
+					resetFields(titleTask, taskDescription, taskPomodoro)
+				}
+			})
+		});   	
+	}
+	
+	form.addEventListener("submit", (event) => {
+		event.preventDefault()
+		addTask()
+	});
 
-    form.addEventListener("submit", (event) => {
-    	event.preventDefault()
-    	addTask()
-    });
-
-    const createData = (id_user, title, qtd_pomodoros, description) => {
-    	/*
-		cria um objeto FormData() que será enviado para o servidor
-    	*/
-		const data = new FormData();
-		console.log(data)
-    	data.append("id_user", id_user)
-    	data.append("title", title)
-    	data.append("qtd_pomodoros", qtd_pomodoros)
-    	data.append("description", description)
-    	return data
-    }	
-
-   	const request = (data) => {
-   		/*
-		realiza a requsição post enviando os dados da task que serão salvos
-   		*/
-   		const url = "http://localhost:5000/api/addTask"
-   		fetch(url, {method:"POST", body:data})
-   		.then(promise => promise.json())
-   		.then(json => response(json))
-   	}
-
-   	const response = (json) => {
-   		/*
-   		json - resposta do servidor ao adicionar uma task
-   		*/
-   		if (json["success"]) {
-   			//caso tudo tenha corrido bem, exibir as tasks
-   			requestTasks()
-   		}
-   	}
+	const resetFields = (...params) =>{
+		for (const param of params) {
+			param.value = ""
+		}
+	}
 
 });
 

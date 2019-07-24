@@ -1,75 +1,86 @@
+## Documentação da api
 
-## API
-
-### Endpoint - /api/registrar
-Responsavel pelo registro de um usuario. Recebera -> name, email, password
-retornará um json no formato
+### Registrar um usuario endpoint -> /registrar.
+Recebe um json com os dados do usuario no formato
 ```json
-{
-    "success" : "Boolean"
-}
+    {
+        "email" : "email@domain",
+        "name" : "Nome do usaurio",
+        "password" : "senhadosuaurio"
+    }
 ```
 
-### Endpoint - /auth
-Responsável pela geração do token. Irá gerar um token para o usuario em caso de haver um registro do usuario passado no banco de dados. Recebe na requisição o email e a senha do usuario. O token ficará guardado no lado do cliente no localStorage.
-
+### A resposta que a api vai dar será uma mensagem com status code 200 e uma mensagem indicando o sucesso da operação
 ```json
-{
-    "access_token" : "token"
-}
-
+    {
+        "message" : "success"
+    }
 ```
-Em caso de email/senha inválidos, ele retornará:
+Caso não consiga por algum motivo inserir o usuario retornará 400 com o json seguinte
 ```json
-{
-    "description": "Invalid credentials",
-    "error": "Bad Request",
-    "status_code": 401
-}
+    {
+        "message" : "error"
+    }
 ```
 
-### Endpoint - /api/getUser
-Responsavel por retornar informações sobre o usuario logado, utilizará o token para validação (@jwt_required()).
-
+### Endpoint para login -> /logar
+O endpoint retornará o token que será utilizado para validação do usuario
 ```json
-{
-    "id" : "user_id",
-    "name" : "user_name",
-    "email" : "user_email"
-    
-}
+    {
+        "token" : "token"
+    }
 ```
-Caso o token de validação tenha se expirado no lado do cliente será necessário a geração de um novo (logar novamente)
+Em caso de erro na validação do usuario retornará o seguinte json com o código 401
 ```json
-{
-    "description": "Signature has expired",
-    "error": "Invalid token",
-    "status_code": 401
-}
+    {
+        "message" : "error validating user"
+    }
 ```
-Se por algum motivo o token foi modificado no lado do cliente e ele tentar passar o token incorreto:
+### A utilização do token será realizada sempre que precisar de informações sobre o usuario, nesse caso, fazendo uma requisição para o endpoint /user vai obter algumas informações do usuario.
 ```json
-{
-    "description": "Signature verification failed",
-    "error": "Invalid token",
-    "status_code": 401
-}
+    {
+        "email": "danilomarques20@hotmail.com",
+        "id_user": 1,
+        "name": "Danilo Marques"
+    }
 ```
 
-## Abaixo segue os endpoints que tratam as atividades
-### Endpoint - /api/viewTasks
-Vai retornar todas as tasks que não foram finalizadas de um determinado usuario. Receberá o id o usuario.
-Retorno:
-```json
-{
-    "tasks" : [
-                "task1", 
-                "task2", 
-                "task3",
-                "task4"]
-}
-```
-Onde task1 -> é uma lista -> task1[0] -> id_task, task1[1] -> id_user, task2[2] -> Titulo, task2[3] -> Qtd_pomodoros, task2[4] -> Descrição
+## Endpoints referentes ao controle das atividades do usuario
 
-### Endpoint - /api/addTask
-Endpoint para adicionar uma nova atividade, receberá o id do usuario logado e as informações sobre a atividade. E efetuara a inserção da atividade no banco.
+### Para adicionar uma task, utilizar o endpoint /addTask passando um json com os valores necessários.
+```json
+    {
+        "title" : "titulo da atividade",
+        "description" : "Descrição da atividade a ser realizada",
+        "pomodoros_total" : "Quantidade total de pomodoros que será realizada para aquela atividade",
+        "id_user" : "Id do usuario ao qual aquela atividade esta vinculada"
+    }
+```
+O retorno será um json com uma mensagem de sucesso e o codigo http 200
+```json
+    {
+        "message" : "success"     
+    }
+```
+
+### Retornar todas as atividades daquele usuario /tasks enviando o token no header
+```json
+    {
+        "tasks" : [
+             {
+                "id_task" : "id da task",
+                "title" : "titulo da atividade",
+                "description" : "Descrição da atividade a ser realizada",
+                "current_pomodoros" : "current_pomodoros",
+                "pomodoros_total" : "Quantidade total de pomodoros que será realizada para aquela atividade"
+            },   
+            {
+                "id_task" : "id da task",
+                "title" : "titulo da atividade",
+                "description" : "Descrição da atividade a ser realizada",
+                "current_pomodoros" : "current_pomodoros",
+                "pomodoros_total" : "Quantidade total de pomodoros que será realizada para aquela atividade"
+            }
+        ]
+    }
+```
