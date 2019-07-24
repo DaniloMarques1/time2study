@@ -1,5 +1,5 @@
 const modal = (str) => {
-    return `<div id="myModal" class="modal" tabindex="-1" role="dialog">
+    return `<div id="myModalError" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -31,6 +31,9 @@ const errorRegister = () => {
     return modal("Erro ao registrar")
 }
 
+const unexpectedError = () => {
+  return modal("Erro inesperado ocorreu")
+} 
 //console.log(missmatchPassword())
 
-export  { missmatchPassword, errorLogin, errorRegister }
+export  { missmatchPassword, errorLogin, errorRegister, unexpectedError }

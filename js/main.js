@@ -1,3 +1,5 @@
+import  { unexpectedError } from './erros.js'
+
 function isLogged() {
     const token = localStorage.getItem("token")
     if (token != "undefined" && token != null) {
@@ -19,7 +21,7 @@ isLogged()
 
 document.addEventListener("DOMContentLoaded", () => {
     const sair = document.querySelector("#sair")
-    
+    const erro = document.querySelector("#erro")
     //Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
     sair.addEventListener("click", () => {
         console.log("opa")
@@ -49,9 +51,31 @@ document.addEventListener("DOMContentLoaded", () => {
 				div += genetateDivTask(task)
 			}
 			tasksDiv.innerHTML = div
+			const startTask = Array.from(document.querySelectorAll(".play_button"))
+			startTask.map(task  => {
+				task.addEventListener("click", () => {
+					const id_task = task.getAttribute("data-id")
+					const specificTask = getTask(tasks, id_task)
+					if (specificTask) {
+						timer(specificTask)
+					} else {
+						erro.innerHTML = unexpectedError()
+						$("#myModalError").modal("show")
+					}
+				});
+			});
 		});
 	}
+	
 	showTasks()
+	
+	const getTask = (tasks, id_task) => {
+		for (const task of tasks) {
+			if (task.id_task == id_task) {
+				return task
+			}
+		}
+	}
 
 	const genetateDivTask = (task) => {
 		return `
@@ -60,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		    </div>
 		`
 	}
-
+	
     const addTask = () => {
     	/*
 		  função responsavel por enviar os dados para o servidor da atividade
@@ -106,11 +130,69 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	const resetFields = (...params) =>{
-		for (const param of params) {
-			param.value = ""
-		}
+		params.map(field => field.value = "")
 	}
 
+	/* Geração do cronometro */
+	const time = document.querySelector("#minutes_seconds_value")
+	const startTimer = document.querySelector("#startTimer")
+	const pauseTimer = document.querySelector("#pauseTimer")
+	const resetTimer = document.querySelector("#resetTimer")
+
+	let minutes = 25
+	let seconds = 0
+	let intervalId = undefined
+	
+	const timer = (task) => {
+		console.log(task)
+		time.innerHTML = showTime(minutes, seconds)
+		$("#timerModal").modal("show")
+	}
+	
+	const showTime = (minutes, seconds) => {
+		return `${padNumber(minutes)}:${padNumber(seconds)}`
+	}
+
+	const padNumber = (number) => {
+		number = number.toString()
+		if (number.length < 2) {
+			number = "0" + number
+		}
+		return number
+	}
+
+	startTimer.addEventListener("click", () => {
+		intervalId = setInterval(timeIt, 1000)
+	})
+
+	const timeIt = () => {
+		seconds--
+		if (seconds <= -1) {
+			seconds = 59
+			minutes--
+			if (minutes == 0) {
+				clearInterval(intervalId)
+			}
+		}
+		time.innerHTML = showTime(minutes, seconds)
+	}
+
+	document.querySelector("#close_timer").addEventListener("click", () => {
+		minutes = 25
+		seconds = 0
+		clearInterval(intervalId)
+	})
+
+	resetTimer.addEventListener("click", () => {
+		minutes = 25
+		seconds = 0
+		clearInterval(intervalId)
+		time.innerHTML = showTime(minutes, seconds)
+	});
+
+	pauseTimer.addEventListener("click", () => {
+		clearInterval(intervalId)
+	});	
 });
 
 

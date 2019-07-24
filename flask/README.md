@@ -84,3 +84,14 @@ O retorno será um json com uma mensagem de sucesso e o codigo http 200
         ]
     }
 ```
+
+### Retornar uma task especifica com base no id /task/id
+```json
+        {
+            "id_task" : "id da task",
+            "title" : "titulo da atividade",
+            "description" : "Descrição da atividade a ser realizada",
+            "current_pomodoros" : "current_pomodoros",
+            "pomodoros_total" : "Quantidade total de pomodoros que será realizada para aquela atividade"
+        }
+```

@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		//erro.insertAdjacentHTML("beforeend", missmatchPassword())
 		erro.innerHTML = missmatchPassword()
         // deixando o modal visivel
-		$('#myModal').modal('show');
+		$('#myModalError').modal('show');
 
 		return false
 	}
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				window.location.href = "logar.html"
 			} else {
 				erro.innerHTML = errorRegister()
-				$("#myModal").modal("show")
+				$("#myModalError").modal("show")
 			}
 		})
 		

@@ -93,9 +93,34 @@
     </div>
   </div>
 
-  <div id="timer">
-    
-  </div>
+      <div id="timer">
+        <div class="modal fade" id="timerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              </div>
+              <div class="modal-body-timer">
+                <div id="minutes_seconds">
+                  <h1 id="minutes_seconds_value">10</h1>
+                </div>
+                <div id="timer_buttons">
+                  <button id="startTimer" class="btn btn-success">Start</button>
+                  <button id="pauseTimer" class="btn btn-info">Pause</button>
+                  <button id="resetTimer" class="btn btn-danger">Reset</button>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" id="close_timer" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="erro">
+
+        </div>
+
     </main>
 
     <!-- Optional JavaScript -->

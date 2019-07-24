@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				return res.json()
 			} else {
 				erro.innerHTML = errorLogin()
-				$("#myModal").modal("show")
+				$("#myModalError").modal("show")
 			}
 		})
 		.then(json => {
