@@ -112,7 +112,7 @@ class update_task(Resource):
 			task.active = False
 			status = 200
 		db.session.commit()
-		return make_response({"message" : "success"}, status)
+		return make_response({"current_pomodoros" : task.current_pomodoros}, status)
 
 api.add_resource(Registrar, "/registrar")
 api.add_resource(Logar, "/logar")

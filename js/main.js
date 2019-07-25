@@ -138,15 +138,22 @@ document.addEventListener("DOMContentLoaded", () => {
 	const startTimer = document.querySelector("#startTimer")
 	const pauseTimer = document.querySelector("#pauseTimer")
 	const resetTimer = document.querySelector("#resetTimer")
+
+	const DEFAULT_TIMER = 25
+	const DEFAULT_BREAK = 5
+	const DEFAULT_SECONDS  = 59
+
+
 	let task_id      = undefined
 
-	let minutes = 1
+	let minutes = DEFAULT_TIMER
 	let seconds = 0
 	let intervalId = undefined
-	
+	let breakTime = false
+
 	const timer = (task) => {
 		task_id = task.id_task
-		console.log(task_id)
+		
 		time.innerHTML = showTime(minutes, seconds)
 		$("#timerModal").modal("show")
 	}
@@ -164,7 +171,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	startTimer.addEventListener("click", () => {
-		intervalId = setInterval(timeIt, 100)
+		console.log("Opa")
+		if (breakTime) {
+			console.log("Opa 2")
+			intervalId = setInterval(timeBreak, 100)
+		} else {
+			console.log("Opa 3")
+			intervalId = setInterval(timeIt, 100)
+		}
 	})
 
 	const timeIt = () => {
@@ -175,16 +189,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				seconds = 0
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
-				fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
-				.then(response => {
-					if (response.status == 200) {
-						showTasks()
-					} 
+				// fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
+				// .then(response => {
+				// 	if (response.status == 200) {
+				// 		showTasks()
+				// 		minutes = DEFAULT_BREAK
+				// 		seconds = 0
+				// 	} 
 					
-				})
+				// })
+				minutes = DEFAULT_TIMER
+				seconds = 0
+				breakTime = true
 				clearInterval(intervalId)
 			}else {
-				seconds = 59
+				seconds = DEFAULT_SECONDS
 				minutes--
 			}
 			
@@ -192,14 +211,24 @@ document.addEventListener("DOMContentLoaded", () => {
 		time.innerHTML = showTime(minutes, seconds)
 	}
 
+	const timeBreak = () => {
+		console.log("Time break")
+		seconds--
+		if (seconds <= -1 ) {
+			minutes--
+			seconds = DEFAULT_SECONDS;
+		}
+		time.innerHTML = showTime(minutes, seconds)
+	}
+
 	document.querySelector("#close_timer").addEventListener("click", () => {
-		minutes = 25
+		minutes = DEFAULT_TIMER
 		seconds = 0
 		clearInterval(intervalId)
 	})
 
 	resetTimer.addEventListener("click", () => {
-		minutes = 25
+		minutes = breakTime ? DEFAULT_BREAK : DEFAULT_TIMER
 		seconds = 0
 		clearInterval(intervalId)
 		time.innerHTML = showTime(minutes, seconds)
