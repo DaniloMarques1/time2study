@@ -95,3 +95,5 @@ O retorno será um json com uma mensagem de sucesso e o codigo http 200
             "pomodoros_total" : "Quantidade total de pomodoros que será realizada para aquela atividade"
         }
 ```
+
+### Atualizar uma tarefa no banco, caso se tenha finalizado um pomodoro. Atualizar a quantidade atual de pomodoros a serem feitas (current_pomodoros) e caso current_pomodoros == pomodoros_total mudar active para 0.

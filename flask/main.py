@@ -80,8 +80,9 @@ class Tasks(Resource):
 		tasks_list = user.tasks
 		retorno = []
 		for task in tasks_list:
-			task_dict = {"id_task" : task.id_task, "title" : task.title, "description" : task.description, "current_pomodoros" : task.current_pomodoros, "pomodoros_total" : task.pomodoros_total}
-			retorno.append(task_dict)
+			if task.active == True:
+				task_dict = {"id_task" : task.id_task, "title" : task.title, "description" : task.description, "current_pomodoros" : task.current_pomodoros, "pomodoros_total" : task.pomodoros_total}
+				retorno.append(task_dict)
 		return make_response({"tasks" : retorno}, 200)
 
 class get_task(Resource):
@@ -90,7 +91,7 @@ class get_task(Resource):
 		user = get_jwt_identity()
 		print(user)
 		task = Task.query.filter_by(id_task=id_task).first()
-		if task is not None and task.id_user == user["id_user"]:
+		if task is not None and task.id_user == user["id_user"] and task.active == True:
 			response = {
 				"id_task" : task.id_task,
 				"title" : task.title,
@@ -101,12 +102,25 @@ class get_task(Resource):
 			return make_response(response, 200)
 		return make_response({"message" : "Task not found"}, 404)
 
+class update_task(Resource):
+	@jwt_required
+	def get(self, id_task):
+		task = Task.query.filter_by(id_task=id_task).first()
+		task.current_pomodoros += 1
+		status = 204 #Caso nao precise atualizar a lista de atividades
+		if task.current_pomodoros == task.pomodoros_total:
+			task.active = False
+			status = 200
+		db.session.commit()
+		return make_response({"message" : "success"}, status)
+
 api.add_resource(Registrar, "/registrar")
 api.add_resource(Logar, "/logar")
 api.add_resource(getUser, "/user")
 api.add_resource(add_task, "/addTask")
 api.add_resource(Tasks, "/tasks")
 api.add_resource(get_task, "/task/<id_task>")
+api.add_resource(update_task, "/updateTask/<id_task>")
 
 if __name__ == "__main__":
 	app.run(debug=True)

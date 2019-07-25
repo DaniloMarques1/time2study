@@ -138,13 +138,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	const startTimer = document.querySelector("#startTimer")
 	const pauseTimer = document.querySelector("#pauseTimer")
 	const resetTimer = document.querySelector("#resetTimer")
+	let task_id      = undefined
 
-	let minutes = 25
+	let minutes = 1
 	let seconds = 0
 	let intervalId = undefined
 	
 	const timer = (task) => {
-		console.log(task)
+		task_id = task.id_task
+		console.log(task_id)
 		time.innerHTML = showTime(minutes, seconds)
 		$("#timerModal").modal("show")
 	}
@@ -162,17 +164,30 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	startTimer.addEventListener("click", () => {
-		intervalId = setInterval(timeIt, 1000)
+		intervalId = setInterval(timeIt, 100)
 	})
 
 	const timeIt = () => {
 		seconds--
 		if (seconds <= -1) {
-			seconds = 59
-			minutes--
-			if (minutes == 0) {
+			
+			if (minutes == 0 && seconds == -1) {
+				seconds = 0
+				const myHeaders = new Headers()
+				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
+				fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
+				.then(response => {
+					if (response.status == 200) {
+						showTasks()
+					} 
+					
+				})
 				clearInterval(intervalId)
+			}else {
+				seconds = 59
+				minutes--
 			}
+			
 		}
 		time.innerHTML = showTime(minutes, seconds)
 	}
