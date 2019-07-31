@@ -1,4 +1,6 @@
 import  { unexpectedError } from './erros.js'
+import  { loader }          from './loader.js'
+
 
 function isLogged() {
     const token = localStorage.getItem("token")
@@ -11,7 +13,6 @@ function isLogged() {
                 window.location.href = "logar.html"
             }
         })
-
     } else {
         window.location.href = "logar.html"
     }
@@ -22,9 +23,15 @@ isLogged()
 document.addEventListener("DOMContentLoaded", () => {
     const sair = document.querySelector("#sair")
     const erro = document.querySelector("#erro")
-    //Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
+	const loaderContent = document.querySelector("#loaderContent")
+
+	loaderContent.innerHTML = loader()
+	$("#modalLoader").modal("show")
+	console.log(loader())
+
+	//Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
     sair.addEventListener("click", () => {
-        console.log("opa")
+		$("#modalLoader").modal("show")
         localStorage.clear()
         window.location.href = "logar.html"
     });
@@ -38,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
 		fetch("http://localhost:5000/tasks", {headers : myHeaders})
 		.then(response => {
+			$("#modalLoader").modal("hide")
 			if (response.ok) {
 				return response.json()
 			} else {
@@ -90,9 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		  função responsavel por enviar os dados para o servidor da atividade
 		*/
         var myHeaders = new Headers()
-        myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
+		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
+		$("#modalLoader").modal("show")
 		fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
         .then(response => {
+			$("#modalLoader").modal("hide")
 			if (response.ok) {
 				return response.json()
 			} else {
@@ -100,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		})
 		.then(user => {
-			console.log
 			//Requisição post para adicionar a tarefa
 			const titleTask       = document.querySelector("#task_title")
 			const taskDescription = document.querySelector("#task_description")
@@ -139,10 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	const pauseTimer = document.querySelector("#pauseTimer")
 	const resetTimer = document.querySelector("#resetTimer")
 
+	//constantes referentes ao usuario
 	const DEFAULT_TIMER = 25
 	const DEFAULT_BREAK = 5
 	const DEFAULT_SECONDS  = 59
-
+	const clockSpeed = 1000
 
 	let task_id      = undefined
 
@@ -174,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		console.log("Opa")
 		if (breakTime) {
 			console.log("Opa 2")
-			intervalId = setInterval(timeBreak, 100)
+			intervalId = setInterval(timeBreak, clockSpeed)
 		} else {
 			console.log("Opa 3")
-			intervalId = setInterval(timeIt, 100)
+			intervalId = setInterval(timeIt, clockSpeed)
 		}
 	})
 

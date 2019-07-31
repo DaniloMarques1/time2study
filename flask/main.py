@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 
 jwt = JWTManager(app)
 
+#Models
 class User(db.Model):
 	id_user = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50), nullable=False)
@@ -81,7 +82,7 @@ class Tasks(Resource):
 		retorno = []
 		for task in tasks_list:
 			if task.active == True:
-				task_dict = {"id_task" : task.id_task, "title" : task.title, "description" : task.description, "current_pomodoros" : task.current_pomodoros, "pomodoros_total" : task.pomodoros_total}
+				task_dict = {"id_task" : task.id_task, "title" : task.title, "description" : task.description, "current_pomodoros" : task.current_pomodoros, "pomodoros_total" : task.pomodoros_total, "active" : task.active}
 				retorno.append(task_dict)
 		return make_response({"tasks" : retorno}, 200)
 
@@ -107,12 +108,25 @@ class update_task(Resource):
 	def get(self, id_task):
 		task = Task.query.filter_by(id_task=id_task).first()
 		task.current_pomodoros += 1
-		status = 204 #Caso nao precise atualizar a lista de atividades
+		status = 201 #Caso nao precise atualizar a lista de atividades
 		if task.current_pomodoros == task.pomodoros_total:
 			task.active = False
 			status = 200
 		db.session.commit()
 		return make_response({"current_pomodoros" : task.current_pomodoros}, status)
+
+class get_history(Resource):
+	@jwt_required
+	def get(self):
+		identity = get_jwt_identity()
+		user = User.query.filter_by(id_user=identity["id_user"]).first()
+		tasks_list = user.tasks
+		retorno = []
+		for task in tasks_list:
+			if task.active == False:
+				task_dict = {"id_task" : task.id_task, "title" : task.title, "description" : task.description, "current_pomodoros" : task.current_pomodoros, "pomodoros_total" : task.pomodoros_total, "active" : task.active}
+				retorno.append(task_dict)
+		return make_response({"tasks" : retorno}, 200)
 
 api.add_resource(Registrar, "/registrar")
 api.add_resource(Logar, "/logar")
@@ -121,6 +135,7 @@ api.add_resource(add_task, "/addTask")
 api.add_resource(Tasks, "/tasks")
 api.add_resource(get_task, "/task/<id_task>")
 api.add_resource(update_task, "/updateTask/<id_task>")
+api.add_resource(get_history, "/history")
 
 if __name__ == "__main__":
 	app.run(debug=True)

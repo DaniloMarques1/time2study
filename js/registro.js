@@ -1,5 +1,5 @@
 import {missmatchPassword, errorRegister} from './erros.js'
-
+import { loader } from './loader.js'
 
 document.addEventListener("DOMContentLoaded", () => {
 	//Constantes referentes aos inputs html e url
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const url = "http://localhost:5000/registrar"
 	const form = document.querySelector("#form")
 	const erro = document.querySelector("#erro")
+	const loaderContent = document.querySelector("#loaderContent")
 
 	//Criação do form data para enviar na requisição
 	const createData = () => {
@@ -29,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	form.onsubmit = (event) => {
 		event.preventDefault()
+		loaderContent.innerHTML = loader()
+		$("#modalLoader").modal("show")
 		const data = createData()
 		if (data != false) {
 			postRequest(data)
@@ -56,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		myHeaders.append("Content-Type", "application/json")
 		fetch(url, {method : "POST", body : JSON.stringify(data), headers : myHeaders})
 		.then(promise  => {
+			$("#modalLoader").modal("hide")
 			if (promise.ok) {
 				window.location.href = "logar.html"
 			} else {

@@ -1,4 +1,6 @@
 import {errorLogin} from './erros.js'
+import { loader } from './loader.js'
+
 
 //Só permite ir para a pagina de login caso não esteja logado
 const isLogged = () => {
@@ -24,10 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	const email = document.querySelector("#email")
 	const url = "http://localhost:5000/logar"
 	const erro = document.querySelector("#erro")
-	
+	const btnSubmit = document.querySelector("#btn_click")
+	const loaderContent = document.querySelector("#loaderContent")
+
 	form.addEventListener("submit", (event) => {
 		event.preventDefault()
+		btnSubmit.disabled = true
 		const data = createData()
+		loaderContent.innerHTML = loader()
+		$("#modalLoader").modal("show")
+		console.log(loader())
 		request(data)
 	});
 
@@ -40,6 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		myHeaders.append("Content-Type", "application/json");
 		fetch(url, {method : "POST", headers: myHeaders, body: data})
 		.then(res => {
+			btnSubmit.disabled = false
+			$("#modalLoader").modal("hide")
 			if (res.ok) {
 				return res.json()
 			} else {
