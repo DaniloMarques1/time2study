@@ -54,7 +54,7 @@ class Logar(Resource):
 		if user is not None:
 			if check_password_hash(user.password, password):
 				user_identity = {"id_user" : user.id_user, "name" : user.name, "email" : user.email}
-				token = create_access_token(identity=user_identity)
+				token = create_access_token(identity=user_identity, expires_delta=False)
 				return make_response({"token" : token}, 200)
 		
 		return make_response({"message" : "error validating user"}, 401)
