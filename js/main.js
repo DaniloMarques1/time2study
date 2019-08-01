@@ -163,11 +163,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const timer = (task) => {
 		task_id = task.id_task
-		
+		const taskValuesDiv = document.querySelector("#task_values")
+		const taskInfo = makeTaskInfo(task)
+		const taskTitle  = document.querySelector("#task_title_modal")
 		time.innerHTML = showTime(minutes, seconds)
+		taskTitle.innerHTML = task.title
+		taskValuesDiv.innerHTML = taskInfo
 		$("#timerModal").modal("show")
 	}
 	
+	const makeTaskInfo = (task) => {
+		return `
+			<div>
+				<h5 class='text-center'>${task.current_pomodoros}/${task.pomodoros_total}</h5>
+				<h5>${task.description}</h5>
+			</div>
+
+		`
+	}
+
 	const showTime = (minutes, seconds) => {
 		return `${padNumber(minutes)}:${padNumber(seconds)}`
 	}
