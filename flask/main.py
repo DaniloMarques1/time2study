@@ -46,7 +46,7 @@ class Registrar(Resource):
 			db.session.commit()
 			return make_response({"message" : "success"}, 200)
 		else:
-			return make_response({"message" : "error"}, 400)
+			return make_response({"message" : "email has already been used"}, 400)
 
 class Logar(Resource):
 	def post(self):
@@ -58,7 +58,7 @@ class Logar(Resource):
 				token = create_access_token(identity=user_identity, expires_delta=False)
 				return make_response({"token" : token}, 200)
 		
-		return make_response({"message" : "error validating user"}, 401)
+		return make_response({"message" : "email and/or password incorrect"}, 401)
 
 class getUser(Resource):
 	@jwt_required
