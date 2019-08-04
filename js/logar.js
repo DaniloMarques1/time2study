@@ -1,6 +1,6 @@
-import {errorLogin} from './erros.js'
 import { loader } from './loader.js'
 
+import { showError } from './erros.js'
 
 //Só permite ir para a pagina de login caso não esteja logado
 const isLogged = () => {
@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		const data = createData()
 		loaderContent.innerHTML = loader()
 		$("#modalLoader").modal("show")
-		console.log(loader())
 		request(data)
 	});
 
@@ -43,25 +42,30 @@ document.addEventListener("DOMContentLoaded", () => {
 		const data = {email : email.value, password : password.value}
 		return JSON.stringify(data)
 	}
+	
 	const request = (data) => {
 		const myHeaders = new Headers()
 		myHeaders.append("Content-Type", "application/json");
 		fetch(url, {method : "POST", headers: myHeaders, body: data})
 		.then(res => {
 			btnSubmit.disabled = false
-			$("#modalLoader").modal("hide")
+			$("#modalLoader").modal("hide")	
 			if (res.ok) {
-				return res.json()
+				//caso o o usuario seja valido
+				res.json().then(json => {
+					const token = json["token"]
+					localStorage.setItem("token", token)
+					window.location.href = "index.html"
+				})
 			} else {
-				erro.innerHTML = errorLogin()
-				$("#myModalError").modal("show")
+				//caso o usuario nao bata
+				res.json().then(json => {
+					erro.innerHTML = showError(json.message)
+					$("#myModalError").modal("show")
+				})
 			}
 		})
-		.then(json => {
-			const token = json["token"]
-			localStorage.setItem("token", token)
-			window.location.href = "index.html"
-		});
+
 	}
 
 });

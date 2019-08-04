@@ -1,0 +1,27 @@
+@import "navbar.css";
+
+html, body{
+	height: 100%;
+	background-color: rgba(228,107,107, 0.2)
+}
+.container {
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.container .card {
+    border-radius: 12px;
+}
+
+@media only screen and (min-width: 620px) {
+    .container {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 10px;
+    }
+     
+}
+
+@media only screen and (min-width: 620px) {

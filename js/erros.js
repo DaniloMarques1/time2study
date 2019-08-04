@@ -19,21 +19,9 @@ const modal = (str) => {
   </div>`
 }
 
-const missmatchPassword = () => {
-    return  modal("Senhas não combinam")
+const showError = (message = "error") => {
+  return modal(message)
 }
 
-const errorLogin = () => {
-  return modal("Senha ou e-mail incorretos")
-}
 
-const errorRegister = () => {
-    return modal("Erro ao registrar")
-}
-
-const unexpectedError = () => {
-  return modal("Erro inesperado ocorreu")
-} 
-//console.log(missmatchPassword())
-
-export  { missmatchPassword, errorLogin, errorRegister, unexpectedError }
+export { showError }

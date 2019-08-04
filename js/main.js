@@ -1,4 +1,4 @@
-import  { unexpectedError } from './erros.js'
+import  { showError } from './erros.js'
 import  { loader }          from './loader.js'
 
 
@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	loaderContent.innerHTML = loader()
 	$("#modalLoader").modal("show")
-	console.log(loader())
 
 	//Limpa o local storage caso o usuario clique no botao de sair e redireciona para a pagina de login
     sair.addEventListener("click", () => {
@@ -67,7 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
 					if (specificTask) {
 						timer(specificTask)
 					} else {
-						erro.innerHTML = unexpectedError()
+						erro.innerHTML = showError("unnexpected error")
+						//caso o data-id da task tenha sido modificado e o usuario nao possuir aquela task
 						$("#myModalError").modal("show")
 					}
 				});
@@ -144,18 +144,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	/* Geração do cronometro */
 	const time = document.querySelector("#minutes_seconds_value")
-	const startTimer = document.querySelector("#startTimer")
-	const pauseTimer = document.querySelector("#pauseTimer")
-	const resetTimer = document.querySelector("#resetTimer")
+	const startTimer 	= document.querySelector("#startTimer")
+	const pauseTimer    = document.querySelector("#pauseTimer")
+	const resetTimer    = document.querySelector("#resetTimer")
+	const taskValuesDiv = document.querySelector("#task_values")
+	const current_pomodoros = document.querySelector("#current_pomodoros")
 
 	//constantes referentes ao usuario
-	const DEFAULT_TIMER = 25
+	const DEFAULT_TIMER = 1
 	const DEFAULT_BREAK = 5
 	const DEFAULT_SECONDS  = 59
-	const clockSpeed = 1000
+	const clockSpeed = 100
 
 	let task_id      = undefined
-
 	let minutes = DEFAULT_TIMER
 	let seconds = 0
 	let intervalId = undefined
@@ -163,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const timer = (task) => {
 		task_id = task.id_task
-		const taskValuesDiv = document.querySelector("#task_values")
 		const taskInfo = makeTaskInfo(task)
 		const taskTitle  = document.querySelector("#task_title_modal")
 		time.innerHTML = showTime(minutes, seconds)
@@ -175,7 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	const makeTaskInfo = (task) => {
 		return `
 			<div>
-				<h5 class='text-center'>${task.current_pomodoros}/${task.pomodoros_total}</h5>
+				<h5 class='text-center'>
+					${task.current_pomodoros}</span>/${task.pomodoros_total}
+				</h5>
 				<h5>${task.description}</h5>
 			</div>
 
@@ -195,12 +197,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	startTimer.addEventListener("click", () => {
-		console.log("Opa")
 		if (breakTime) {
-			console.log("Opa 2")
 			intervalId = setInterval(timeBreak, clockSpeed)
 		} else {
-			console.log("Opa 3")
 			intervalId = setInterval(timeIt, clockSpeed)
 		}
 	})
@@ -213,17 +212,21 @@ document.addEventListener("DOMContentLoaded", () => {
 				seconds = 0
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
-				// fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
-				// .then(response => {
-				// 	if (response.status == 200) {
-				// 		showTasks()
-				// 		minutes = DEFAULT_BREAK
-				// 		seconds = 0
-				// 	} 
+				fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
+				.then(response => {
+					minutes = DEFAULT_BREAK
+					time.innerHTML = showTime(minutes, seconds)
+					if (response.status == 200) {
+						// caso tenha finalizado a task
+						showTasks()
+						return response.json()
+					}
 					
-				// })
-				minutes = DEFAULT_TIMER
-				seconds = 0
+				})
+				.then(json => {
+					const taskInfo = makeTaskInfo(json["task"])
+					taskValuesDiv.innerHTML = taskInfo
+				});
 				breakTime = true
 				clearInterval(intervalId)
 			}else {
@@ -236,10 +239,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	const timeBreak = () => {
-		console.log("Time break")
 		seconds--
 		if (seconds <= -1 ) {
-			minutes--
+			if (minutes == 0 && seconds == -1){
+				clearInterval(intervalId)
+				console.log("Acabou")
+				$("#timerModal").modal("hide")
+			} else {
+				seconds = DEFAULT_SECONDS
+				minutes--
+			}
+			
 			seconds = DEFAULT_SECONDS;
 		}
 		time.innerHTML = showTime(minutes, seconds)

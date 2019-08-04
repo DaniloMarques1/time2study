@@ -1,4 +1,5 @@
-import {missmatchPassword, errorRegister} from './erros.js'
+import { showError } from './erros.js'
+
 import { loader } from './loader.js'
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -21,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		console.log(erro)
 		//erro.insertAdjacentHTML("beforeend", missmatchPassword())
-		erro.innerHTML = missmatchPassword()
+		erro.innerHTML = showError("password do not match")
         // deixando o modal visivel
 		$('#myModalError').modal('show');
 
@@ -31,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	form.onsubmit = (event) => {
 		event.preventDefault()
 		loaderContent.innerHTML = loader()
-		$("#modalLoader").modal("show")
 		const data = createData()
 		if (data != false) {
+			$("#modalLoader").modal("show")
 			postRequest(data)
 		}
 		// if (data != false) {
@@ -54,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	//Realizando a requisição post enviando os dados do formulario
 	const postRequest = (data) => {
-		console.log(data)
 		const myHeaders = new Headers()
 		myHeaders.append("Content-Type", "application/json")
 		fetch(url, {method : "POST", body : JSON.stringify(data), headers : myHeaders})
@@ -63,11 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (promise.ok) {
 				window.location.href = "logar.html"
 			} else {
-				erro.innerHTML = errorRegister()
-				$("#myModalError").modal("show")
+				//Retorna a resposta como json para ter acesso ao campo "message" do erro
+				promise.json().then(json => {
+					erro.innerHTML = showError(json.message)
+					$("#myModalError").modal("show")
+				})
 			}
 		})
-		
 	}
 
 
