@@ -11,6 +11,7 @@ app.config["JWT_SECRET_KEY"] = "thisissupersecret"
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:12345@localhost/Study"
 
 api = Api(app)
+
 db = SQLAlchemy(app)
 
 jwt = JWTManager(app)
@@ -108,12 +109,19 @@ class update_task(Resource):
 	def get(self, id_task):
 		task = Task.query.filter_by(id_task=id_task).first()
 		task.current_pomodoros += 1
-		status = 201 #Caso nao precise atualizar a lista de atividades
+		status = 204 #Caso nao precise atualizar a lista de atividades
 		if task.current_pomodoros == task.pomodoros_total:
 			task.active = False
 			status = 200
+			response = {
+				"id_task" : task.id_task,
+				"title" : task.title,
+				"description" : task.description,
+				"current_pomodoros" : task.current_pomodoros,
+				"pomodoros_total" : task.pomodoros_total
+			}
 		db.session.commit()
-		return make_response({"current_pomodoros" : task.current_pomodoros}, status)
+		return make_response({"task" : response}, status)
 
 class get_history(Resource):
 	@jwt_required
