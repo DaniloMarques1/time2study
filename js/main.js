@@ -1,6 +1,11 @@
 import  { showError } from './erros.js'
 import  { loader }          from './loader.js'
 
+function validPass(password){
+	const regExp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+	return regExp.test(password)
+}
+
 
 function isLogged() {
     const token = localStorage.getItem("token")
@@ -264,6 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		time.innerHTML = showTime(minutes, seconds)
 	}
+
+	
 
 	document.querySelector("#close_timer").addEventListener("click", () => {
 		minutes = DEFAULT_TIMER
