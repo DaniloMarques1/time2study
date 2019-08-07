@@ -44,7 +44,7 @@ class Registrar(Resource):
 			user = User(name=name, email=email, password=password)
 			db.session.add(user)
 			db.session.commit()
-			return make_response({"message" : "success"}, 200)
+			return make_response({"message" : "success"}, 201)
 		else:
 			return make_response({"message" : "email has already been used"}, 400)
 
@@ -72,7 +72,7 @@ class add_task(Resource):
 		task = Task(title=title, description=description, id_user=id_user, pomodoros_total=pomodoros_total)
 		db.session.add(task)
 		db.session.commit()
-		return make_response({"message" : "success"}, 200)
+		return make_response({"message" : "success"}, 201)
 
 class Tasks(Resource):
 	@jwt_required
@@ -108,20 +108,21 @@ class update_task(Resource):
 	@jwt_required
 	def get(self, id_task):
 		task = Task.query.filter_by(id_task=id_task).first()
-		task.current_pomodoros += 1
-		status = 204 #Caso nao precise atualizar a lista de atividades
+		if task.current_pomodoros < task.pomodoros_total:
+			task.current_pomodoros += 1
 		if task.current_pomodoros == task.pomodoros_total:
 			task.active = False
-			status = 200
-			response = {
+		
+		response = {
 				"id_task" : task.id_task,
+				"active" : task.active,
 				"title" : task.title,
 				"description" : task.description,
 				"current_pomodoros" : task.current_pomodoros,
 				"pomodoros_total" : task.pomodoros_total
 			}
 		db.session.commit()
-		return make_response({"task" : response}, status)
+		return make_response({"task" : response}, 200)
 
 class get_history(Resource):
 	@jwt_required

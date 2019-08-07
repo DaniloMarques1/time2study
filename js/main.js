@@ -151,16 +151,18 @@ document.addEventListener("DOMContentLoaded", () => {
 	const current_pomodoros = document.querySelector("#current_pomodoros")
 
 	//constantes referentes ao usuario
-	const DEFAULT_TIMER = 1
+	const DEFAULT_TIMER = 25
 	const DEFAULT_BREAK = 5
 	const DEFAULT_SECONDS  = 59
-	const clockSpeed = 100
+	const clockSpeed = 1000
 
 	let task_id      = undefined
 	let minutes = DEFAULT_TIMER
 	let seconds = 0
 	let intervalId = undefined
 	let breakTime = false
+	//Flag para controlar o fechamento do clock caso a atividade do clock tenha sido finalizada.
+	let closeClockAfterBreak = false
 
 	const timer = (task) => {
 		task_id = task.id_task
@@ -210,23 +212,25 @@ document.addEventListener("DOMContentLoaded", () => {
 			
 			if (minutes == 0 && seconds == -1) {
 				seconds = 0
+				const audio = new Audio("../audio/clock.mp3");
+				audio.play()
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
 				fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
 				.then(response => {
 					minutes = DEFAULT_BREAK
 					time.innerHTML = showTime(minutes, seconds)
-					if (response.status == 200) {
-						// caso tenha finalizado a task
-						showTasks()
-						return response.json()
-					}
 					
+					response.json().then(json => {
+						if (json.task.active == false) {
+							closeClockAfterBreak = true
+						}
+						showTasks()
+						const taskInfo = makeTaskInfo(json.task)
+						taskValuesDiv.innerHTML = taskInfo
+					});
 				})
-				.then(json => {
-					const taskInfo = makeTaskInfo(json["task"])
-					taskValuesDiv.innerHTML = taskInfo
-				});
+				
 				breakTime = true
 				clearInterval(intervalId)
 			}else {
@@ -244,13 +248,19 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (minutes == 0 && seconds == -1){
 				clearInterval(intervalId)
 				console.log("Acabou")
-				$("#timerModal").modal("hide")
+				minutes = DEFAULT_TIMER
+				seconds = 0
+				breakTime = false
+				if (closeClockAfterBreak) {
+					$("#timerModal").modal("hide")
+					closeClockAfterBreak = false
+				}
 			} else {
 				seconds = DEFAULT_SECONDS
 				minutes--
 			}
 			
-			seconds = DEFAULT_SECONDS;
+			
 		}
 		time.innerHTML = showTime(minutes, seconds)
 	}
@@ -259,6 +269,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		minutes = DEFAULT_TIMER
 		seconds = 0
 		clearInterval(intervalId)
+		closeClockAfterBreak = false
+		breakTime = false
 	})
 
 	resetTimer.addEventListener("click", () => {

@@ -10,7 +10,7 @@ html, body{
 .container {
 	margin-top: 20px; 
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 1fr 1fr 1fr;
 	grid-template-rows: 1fr minmax(400px, auto);
 	grid-gap: 10px;
 }
@@ -93,7 +93,7 @@ html, body{
 	margin: 4px;
 	padding: 4px;
 	color: #F05B5B;
-	border-radius: 6px;
+	border-radius: 2px;
 }
 
 .task-item:hover{
@@ -142,8 +142,9 @@ html, body{
 
 
 /* BREAKPOINTS */
-@media only screen and (max-width: 620px) {
+@media only screen and (max-width: 780px) {
 	.container {
+		grid-template-columns: 1fr 1fr;
 		grid-template-areas: "div1 div1"
 							 "div3 div3"
 							 "div2 div2";		
