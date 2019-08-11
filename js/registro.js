@@ -12,19 +12,25 @@ document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 	const erro = document.querySelector("#erro")
 	const loaderContent = document.querySelector("#loaderContent")
+	const weakPassword = document.querySelector("#weak_password")
 
 	//Criação do form data para enviar na requisição
 	const createData = () => {
 		const flag = password.value === confirm_password.value ? true : false
 		if (flag) {
-			const data = {name : name.value, email : email.value, password : password.value}
-			return data
+			if (validPass(password.value)) {
+				const data = {name : name.value, email : email.value, password : password.value}
+				return data
+			} else {
+				weakPassword.style.display = "block"
+			}
+			
+		} else {
+			erro.innerHTML = showError("password do not match")
+			// deixando o modal visivel
+			$('#myModalError').modal('show');
 		}
-		console.log(erro)
-		//erro.insertAdjacentHTML("beforeend", missmatchPassword())
-		erro.innerHTML = showError("password do not match")
-        // deixando o modal visivel
-		$('#myModalError').modal('show');
+
 
 		return false
 	}
@@ -37,20 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			$("#modalLoader").modal("show")
 			postRequest(data)
 		}
-		// if (data != false) {
-		// 	if(validate(data.get("name"), data.get("email"), data.get("password"))){
-		// 		postRequest(data)
-		// 	}
-		// }
-	}
-	//Validando os campos do formulario
-	const validate = (...inputs) => {
-		for (const input of inputs) {
-			if (!input) {
-				return false
-			}
-		}
-		return true
 	}
 
 	//Realizando a requisição post enviando os dados do formulario
@@ -70,6 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
 				})
 			}
 		})
+	}
+
+	function validPass(password){
+		const regExp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+		return regExp.test(password)
 	}
 
 

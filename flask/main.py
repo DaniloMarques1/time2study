@@ -38,7 +38,7 @@ class Registrar(Resource):
 	def post(self):
 		name, email = request.json["name"], request.json["email"]
 		password = generate_password_hash(request.json.get("password"))
-		
+
 		#caso ja possua um usuario com o e-mail passado, não deixar cadastrar
 		if User.query.filter_by(email=email).first() is None:
 			user = User(name=name, email=email, password=password)
@@ -57,7 +57,7 @@ class Logar(Resource):
 				user_identity = {"id_user" : user.id_user, "name" : user.name, "email" : user.email}
 				token = create_access_token(identity=user_identity, expires_delta=False)
 				return make_response({"token" : token}, 200)
-		
+
 		return make_response({"message" : "email and/or password incorrect"}, 401)
 
 class getUser(Resource):
@@ -112,7 +112,7 @@ class update_task(Resource):
 			task.current_pomodoros += 1
 		if task.current_pomodoros == task.pomodoros_total:
 			task.active = False
-		
+
 		response = {
 				"id_task" : task.id_task,
 				"active" : task.active,
@@ -147,4 +147,4 @@ api.add_resource(update_task, "/updateTask/<id_task>")
 api.add_resource(get_history, "/history")
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(debug=True, port=5000)

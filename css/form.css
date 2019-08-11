@@ -50,6 +50,10 @@ form {
     100% { transform: rotate(360deg); }
 }
 
+#weak_password {
+	display: none;
+}
+
 .modal-body-loader {
 	display: flex;
 	justify-content: center;
