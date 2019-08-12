@@ -2,6 +2,8 @@ import { loader } from './loader.js'
 
 import { showError } from './erros.js'
 
+const baseUrl = "http://danilomarques.pythonanywhere.com/"
+
 //Só permite ir para a pagina de login caso não esteja logado
 const isLogged = () => {
 	const token = localStorage.getItem("token")
@@ -9,7 +11,7 @@ const isLogged = () => {
 		var myHeaders = new Headers()
 		myHeaders.append("Authorization", "Bearer " + token)
 		myHeaders.append("Content-Type", "application/json")
-		fetch("http://localhost:5000/user", {headers: myHeaders})
+		fetch(`${baseUrl}/user`, {headers: myHeaders})
 		.then(response => {
 			if (response.ok) {
 				window.location.href = "index.html"
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const form = document.querySelector("#form")
 	const password = document.querySelector("#password")
 	const email = document.querySelector("#email")
-	const url = "http://localhost:5000/logar"
+	const url = `${baseUrl}/logar`
 	const erro = document.querySelector("#erro")
 	const btnSubmit = document.querySelector("#btn_click")
 	const loaderContent = document.querySelector("#loaderContent")

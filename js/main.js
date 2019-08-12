@@ -2,13 +2,15 @@ import  { showError }   from './erros.js'
 import  { loader }      from './loader.js'
 
 
+const baseUrl = "http://danilomarques.pythonanywhere.com/"
+
 
 function isLogged() {
     const token = localStorage.getItem("token")
     if (token != "undefined" && token != null) {
         const myHeaders = new Headers()
         myHeaders.append("Authorization", "Bearer " + token)
-        fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
+        fetch(`${baseUrl}/user`, {method : "GET", headers : myHeaders})
         .then(response => {
             if (!response.ok) {
                 window.location.href = "logar.html"
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const tasksDiv = document.querySelector("#tasks")
 		const myHeaders = new Headers()
 		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
-		fetch("http://localhost:5000/tasks", {headers : myHeaders})
+		fetch(`${baseUrl}/tasks`, {headers : myHeaders})
 		.then(response => {
 			$("#modalLoader").modal("hide")
 			if (response.ok) {
@@ -101,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var myHeaders = new Headers()
 		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
 		$("#modalLoader").modal("show")
-		fetch("http://localhost:5000/user", {method : "GET", headers : myHeaders})
+		fetch(`${baseUrl}/user`, {method : "GET", headers : myHeaders})
         .then(response => {
 			$("#modalLoader").modal("hide")
 			if (response.ok) {
@@ -123,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 			const myHeaders = new Headers()
 			myHeaders.append("Content-Type", "application/json")
-			fetch("http://localhost:5000/addTask", {method : "POST", body : JSON.stringify(body), headers : myHeaders})
+			fetch("http://danilomarques.pythonanywhere.com/addTask", {method : "POST", body : JSON.stringify(body), headers : myHeaders})
 			.then(response => {
 				if (response.ok) {
 					showTasks()
@@ -217,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				audio.play()
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
-				fetch(`http://localhost:5000/updateTask/${task_id}`, {headers : myHeaders})
+				fetch(`http://danilomarques.pythonanywhere.com/updateTask/${task_id}`, {headers : myHeaders})
 				.then(response => {
 					minutes = DEFAULT_BREAK
 					time.innerHTML = showTime(minutes, seconds)
