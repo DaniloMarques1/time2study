@@ -2,7 +2,7 @@ import { loader } from './loader.js'
 
 import { showError } from './erros.js'
 
-const baseUrl = "http://danilomarques.pythonanywhere.com"
+const baseUrl = "https://danilomarques.pythonanywhere.com"
 
 //Só permite ir para a pagina de login caso não esteja logado
 const isLogged = () => {

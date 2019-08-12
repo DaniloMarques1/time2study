@@ -2,7 +2,7 @@ import  { showError }   from './erros.js'
 import  { loader }      from './loader.js'
 
 
-const baseUrl = "http://danilomarques.pythonanywhere.com"
+const baseUrl = "https://danilomarques.pythonanywhere.com"
 
 
 function isLogged() {
