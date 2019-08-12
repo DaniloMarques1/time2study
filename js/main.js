@@ -221,18 +221,20 @@ document.addEventListener("DOMContentLoaded", () => {
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
 				fetch(`${baseUrl}/updateTask/${task_id}`, {headers : myHeaders})
 				.then(response => {
+					
 					minutes = DEFAULT_BREAK
 					time.innerHTML = showTime(minutes, seconds)
-					
 					response.json().then(json => {
-						if (json.task.active == false) {
+						console.log(json)
+						if (json.active == false) {
 							closeClockAfterBreak = true
 						}
 						showTasks()
-						const taskInfo = makeTaskInfo(json.task)
+						const taskInfo = makeTaskInfo(json)
 						taskValuesDiv.innerHTML = taskInfo
 					});
 				})
+				
 				
 				breakTime = true
 				clearInterval(intervalId)
