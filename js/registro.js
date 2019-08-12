@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function validPass(password){
-		const regExp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
+		const regExp = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$&]{8,}$/
 		return regExp.test(password)
 	}
 

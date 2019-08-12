@@ -2,7 +2,7 @@ import  { showError }   from './erros.js'
 import  { loader }      from './loader.js'
 
 
-const baseUrl = "http://danilomarques.pythonanywhere.com/"
+const baseUrl = "http://danilomarques.pythonanywhere.com"
 
 
 function isLogged() {
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 			const myHeaders = new Headers()
 			myHeaders.append("Content-Type", "application/json")
-			fetch("http://danilomarques.pythonanywhere.com/addTask", {method : "POST", body : JSON.stringify(body), headers : myHeaders})
+			fetch(`${baseUrl}/addTask`, {method : "POST", body : JSON.stringify(body), headers : myHeaders})
 			.then(response => {
 				if (response.ok) {
 					showTasks()
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				audio.play()
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
-				fetch(`http://danilomarques.pythonanywhere.com/updateTask/${task_id}`, {headers : myHeaders})
+				fetch(`${baseUrl}/updateTask/${task_id}`, {headers : myHeaders})
 				.then(response => {
 					minutes = DEFAULT_BREAK
 					time.innerHTML = showTime(minutes, seconds)
