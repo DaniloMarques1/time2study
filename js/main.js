@@ -154,10 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	const current_pomodoros = document.querySelector("#current_pomodoros")
 
 	//constantes referentes ao usuario
-	const DEFAULT_TIMER = 25
+	const DEFAULT_TIMER = 1
 	const DEFAULT_BREAK = 5
 	const DEFAULT_SECONDS  = 59
-	const clockSpeed = 1000
+	const clockSpeed = 100
 
 	let task_id      = undefined
 	let minutes = DEFAULT_TIMER
