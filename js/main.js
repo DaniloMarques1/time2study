@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			
 			if (minutes == 0 && seconds == -1) {
 				seconds = 0
-				const audio = new Audio("https://danilomarques1.github.io/time2study/audio/clock.mp3");
+				const audio = new Audio("time2study/audio/clock.mp3");
 				audio.play()
 				const myHeaders = new Headers()
 				myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
