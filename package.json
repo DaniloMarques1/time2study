@@ -1,0 +1,24 @@
+{
+  "name": "Time2study",
+  "version": "1.0.0",
+  "description": "## Gerenciamento de tempo e atividades para o seu estudo",
+  "main": "./js/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack js/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaniloMarques1/time2study.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DaniloMarques1/time2study/issues"
+  },
+  "homepage": "https://github.com/DaniloMarques1/time2study#readme",
+  "devDependencies": {
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6"
+  }
+}

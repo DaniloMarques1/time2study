@@ -1,4 +1,5 @@
 # Time to study
+Link para o projeto -> https://danilomarques1.github.io/time2study/index.html
 
 ## Gerenciamento de tempo e atividades para o seu estudo
 
@@ -17,3 +18,18 @@ Após ter uma atividade cadastrada ela poderá ser inicializada no quadro (colun
 
 ### Historico
 Todas as atividades ja finalizadas (completada a quantidade de pomodoros cadastradas) poderá ser vista em um historico, pois cada atividade terá uma **flag** que indicará se a atividade esta ativa ou não.
+
+
+### Backend
+O backend da aplicação foi feito em flask. O repositorio do código da api esta -> https://github.com/DaniloMarques1/Time2StudyApi
+
+
+### Futuro
+**Todo**
+
+### A ordem não necessariamente precisa ser essa
+
+1. Refatoração do front end utilizando o reactjs
+2. Pagina de historico de atividades consumindo o endpoint /history
+3. Pagina com o perfil do usuario, exibindo informações sobre ele e podendo editar
+4. Botão para deletar uma atividade recém criada
