@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("#add_task");
 
 	const showTasks = () => {
+		console.log("Opa")
 		const tasksDiv = document.querySelector("#tasks")
 		const myHeaders = new Headers()
 		myHeaders.append("Authorization", "Bearer " + localStorage.getItem("token"))
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		.then(response => {
 			$("#modalLoader").modal("hide")
 			if (response.ok) {
+				
 				return response.json()
 			} else {
 				window.location.href = "logar.html"
