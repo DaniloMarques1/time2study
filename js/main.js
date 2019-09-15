@@ -56,8 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
 				window.location.href = "logar.html"
 			}
 		})
-		.then(json => {
-			const tasks = json["tasks"] // lista de tasks onde cada task na lista é um objeto
+		.then(tasks => {
+			// console.log(json)
+			// const tasks = json["tasks"] // lista de tasks onde cada task na lista é um objeto
 			let div = "";
 			for (const task of tasks) {
 				div += genetateDivTask(task)
